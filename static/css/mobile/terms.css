@@ -1,0 +1,50 @@
+.terms {
+    width: 100%;
+    height: 450px;
+    margin-top: 30px;
+    overflow-y: scroll;
+    box-sizing: border-box;
+}
+
+.terms p {
+    font-size: 20px;
+    padding: 30px 20px 20px;
+    max-height: 500px;
+    text-align: justify;
+}
+
+.terms h1 {
+    font-size: 24px;
+    padding: 0px 20px 0px;
+    max-height: 500px;
+    text-align: justify;
+}
+
+.button-accept{
+    padding: 1rem;
+    width: 200px;
+    background-color: #008f28;
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    border: none;
+}
+
+.button-deny{
+    padding: 1rem;
+    width: 200px;
+    background-color: #d20024;
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    border: none;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    margin-top: -5rem;
+    gap: 30px;
+}
+

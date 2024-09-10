@@ -1,0 +1,19 @@
+
+.message {
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content: center;
+    width: 80%;
+    gap: 6rem;
+}
+
+
+.message p{
+    text-align: center;
+    font-size: 40px;
+}
+
+.message h1{
+    align-self: flex-start;
+}

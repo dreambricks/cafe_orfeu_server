@@ -4,29 +4,48 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/terms.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/default.css') }}">
     <title>Termos e Condições</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
 </head>
+<script>
+
+    var socket = io();
+
+    var link_id = "{{ link_id }}";
+
+    socket.on('invalidate_link', function(data) {
+        if (data.link_id === link_id) {
+            alert("Este link não é mais válido.");
+            window.location.href = "/link_invalid";
+        }
+    });
+</script>
 <body>
+<div class="container">
+
     <h1>Termos e Condições</h1>
-    <p>Por favor, leia e aceite os termos para continuar.</p>
 
-    <form action="/accept/{{ link_id }}" method="POST">
-        <button type="submit">Aceitar</button>
-    </form>
+    <div class="terms">
+        <p>8. - O presente Termo é regido e interpretado de acordo com as leis da República Federativa do Brasil. As
+            partes elegem o foro central da Comarca da Capital da Cidade do Rio de Janeiro – RJ como o competente para
+            dirimir quaisquer controvérsias porventura oriundas deste Termo, com renúncia expressa a qualquer outro, por
+            mais privilegiado que seja.</p>
+    </div>
 
-    <script>
+    <div class="buttons">
+        <form action="/accept/{{ link_id }}" method="POST">
+            <button class="button-accept" type="submit">Aceitar</button>
+        </form>
 
-        var socket = io();
+        <form action="/deny/{{ link_id }}" method="POST">
+            <button class="button-deny" type="submit">Recusar</button>
+        </form>
+    </div>
 
-        var link_id = "{{ link_id }}";
+</div>
 
-        socket.on('invalidate_link', function(data) {
-            if (data.link_id === link_id) {
-                alert("Este link não é mais válido.");
-                window.location.href = "/link_invalid";
-            }
-        });
-    </script>
+
 </body>
 </html>

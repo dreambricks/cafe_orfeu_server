@@ -1,5 +1,5 @@
 from flask_socketio import SocketIO
-from flask import Flask, url_for, send_file, render_template
+from flask import Flask, url_for, send_file, render_template, redirect
 
 from qrcodeaux import generate_qr_code
 from udp_sender import UDPSender
@@ -28,7 +28,6 @@ def alive():
 
 @app.route('/generate', methods=['GET'])
 def generate():
-
     if len(valid_links) >= MAX_LINKS:
         valid_links.clear()
         print("Lista de links esvaziada para evitar sobrecarga.")
@@ -54,15 +53,38 @@ def terms(link_id):
 @app.route('/accept/<link_id>', methods=['POST'])
 def accept(link_id):
     if valid_links.get(link_id):
-        # Invalida o link após aceitar
         valid_links[link_id] = False
-
-        # Emitir o evento de invalidação para todos os clientes conectados
         socketio.emit('invalidate_link', {'link_id': link_id}, to='/')
 
-        return "Termos aceitos, link invalidado"
+        return redirect(url_for('play'))
     else:
-        return "Link já foi utilizado", 400
+        return redirect(url_for('error'))
+
+
+@app.route('/deny/<link_id>', methods=['POST'])
+def deny_btn(link_id):
+    if valid_links.get(link_id):
+        valid_links[link_id] = False
+        socketio.emit('invalidate_link', {'link_id': link_id}, to='/')
+
+        return redirect(url_for('deny'))
+    else:
+        return redirect(url_for('error'))
+
+
+@app.route('/play')
+def play():
+    return render_template("play.html")
+
+
+@app.route('/deny')
+def deny():
+    return render_template("deny.html")
+
+
+@app.route('/error')
+def error():
+    return render_template("error.html")
 
 
 @socketio.on('connect')
