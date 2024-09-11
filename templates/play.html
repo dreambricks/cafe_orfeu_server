@@ -7,9 +7,20 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/play.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/default.css') }}">
     <title>Termos e Condições</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
 </head>
 
 <body>
+
+<script>
+    var socket = io();
+
+    socket.on('render_images', function(data) {
+        var cod = data.cod;
+        window.location.href = '/show_images/' + cod;
+    });
+</script>
+
 <div class="container">
 
     <div class="message">

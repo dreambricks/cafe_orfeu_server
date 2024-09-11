@@ -44,9 +44,9 @@ def remove_old_folders():
                 print(f'A pasta "{foldername}" foi criada há menos de {minutes} minutos.')
 
 
-scheduler = BackgroundScheduler()
-scheduler.add_job(remove_old_folders, 'interval', minutes=2)
-scheduler.start()
+# scheduler = BackgroundScheduler()
+# scheduler.add_job(remove_old_folders, 'interval', minutes=2)
+# scheduler.start()
 
 
 @app.route('/')
@@ -59,7 +59,7 @@ def alive():
     return "Alive"
 
 
-@app.route('/generate', methods=['GET'])
+@app.route('/generateqr', methods=['GET'])
 def generate():
     if len(valid_links) >= MAX_LINKS:
         valid_links.clear()
@@ -85,7 +85,7 @@ def qrcode_images():
 
     img_bytes = generate_qr_code(url)
 
-    socketio.emit('render_images')
+    socketio.emit('render_images', {'cod': cod})
 
     return send_file(img_bytes, mimetype='image/png')
 
@@ -102,6 +102,20 @@ def download_images():
 
     zip_filename = f"{cod}_images_cafeorfeu.zip"
     return send_file(zip_buffer, mimetype='application/zip', as_attachment=True, download_name=zip_filename)
+
+
+@app.route('/show_images/<cod>')
+def show_images(cod):
+    images_dir = os.path.join(app.static_folder, 'download_images', cod)
+
+    if not os.path.exists(images_dir):
+        abort(404)
+
+    image_files = [f for f in os.listdir(images_dir) if f.endswith(('.png', '.jpg', '.jpeg', '.gif'))]
+
+    image_paths = [url_for('static', filename=f'download_images/{cod}/{image_file}') for image_file in image_files]
+
+    return render_template('download-images.html', image_paths=image_paths, cod=cod)
 
 
 @app.route('/terms/<link_id>')

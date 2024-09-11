@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/download-images.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/default.css') }}">
+    <title>Download</title>
+</head>
+
+<body>
+<div class="container">
+
+    <div class="images-container">
+        <h1>BAIXE SUA OBRA DE ARTE!</h1>
+
+        {% if image_paths %}
+        {% for image_path in image_paths %}
+
+        <img src="{{ image_path }}" alt="Imagem {{ loop.index }}">
+
+        {% endfor %}
+        {% else %}
+        <p>Nenhuma imagem encontrada para o código {{ cod }}.</p>
+        {% endif %}
+    </div>
+
+    <div class="download">
+        <a href="{{ url_for('download_images', cod=cod) }}">
+            <button>Download Imagens</button>
+        </a>
+    </div>
+
+
+</div>
+
+</body>
+</html>
