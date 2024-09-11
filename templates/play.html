@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/play.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/default.css') }}">
     <title>Termos e Condições</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
 </head>
 
 <body>
@@ -15,9 +15,18 @@
 <script>
     var socket = io();
 
+    var cod = "{{ cod }}";
+
+    socket.emit('join', {cod: cod});
+
     socket.on('render_images', function(data) {
-        var cod = data.cod;
-        window.location.href = '/show_images/' + cod;
+        if (data.cod === cod) {
+            window.location.href = '/show_images/' + cod;
+        }
+    });
+
+    socket.on('status', function(data) {
+        console.log(data.msg);
     });
 </script>
 

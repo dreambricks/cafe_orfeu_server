@@ -1,4 +1,4 @@
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, emit, join_room
 from flask import Flask, url_for, send_file, render_template, redirect, request, abort
 
 import parameters
@@ -9,6 +9,7 @@ import uuid
 import os
 import time
 import shutil
+import random
 from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
@@ -85,7 +86,7 @@ def qrcode_images():
 
     img_bytes = generate_qr_code(url)
 
-    socketio.emit('render_images', {'cod': cod})
+    socketio.emit('render_images', {'cod': cod}, room=cod, namespace='/')
 
     return send_file(img_bytes, mimetype='image/png')
 
@@ -131,20 +132,20 @@ def accept(link_id):
     if valid_links.get(link_id):
         valid_links[link_id] = False
         socketio.emit('invalidate_link', {'link_id': link_id}, to='/')
-
-        return redirect(url_for('play'))
+        random_number = random.randint(10000, 99999) #-----------------------------------------------------------------------------------------------
+        return redirect(url_for('play', cod=1234))
     else:
         return redirect(url_for('error'))
+
+
+@app.route('/play/<cod>')
+def play(cod):
+    return render_template('play.html', cod=cod)
 
 
 @app.route('/deny', methods=['POST'])
 def deny_btn():
     return redirect(url_for('deny'))
-
-
-@app.route('/play')
-def play():
-    return render_template("play.html")
 
 
 @app.route('/deny')
@@ -165,6 +166,13 @@ def handle_connect():
 @socketio.on('disconnect')
 def handle_disconnect():
     print('Cliente desconectado')
+
+
+@socketio.on('join')
+def on_join(data):
+    cod = data['cod']
+    join_room(cod)
+    emit('status', {'msg': f'Você entrou na sala {cod}'}, room=cod)
 
 
 if __name__ == '__main__':
