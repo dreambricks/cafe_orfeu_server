@@ -7,6 +7,9 @@ from qrcodeaux import generate_qr_code
 from udp_sender import UDPSender
 import uuid
 import os
+import time
+import shutil
+from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
 app.secret_key = 'dbsupersecretkey'
@@ -19,6 +22,31 @@ valid_links = {}
 MAX_LINKS = 5
 
 IMAGE_BASE_FOLDER = os.path.join(app.root_path, 'static', 'download_images')
+
+
+def remove_old_folders():
+    current_time = time.time()
+    directory = 'static/download_images'
+    minutes = 10
+
+    for foldername in os.listdir(directory):
+        folder_path = os.path.join(directory, foldername)
+
+        if os.path.isdir(folder_path):
+            creation_time = os.path.getctime(folder_path)
+            time_difference = (current_time - creation_time) / 60
+
+            if time_difference > minutes:
+
+                shutil.rmtree(folder_path)
+                print(f'A pasta "{foldername}" foi excluída.')
+            else:
+                print(f'A pasta "{foldername}" foi criada há menos de {minutes} minutos.')
+
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(remove_old_folders, 'interval', minutes=2)
+scheduler.start()
 
 
 @app.route('/')
@@ -56,6 +84,8 @@ def qrcode_images():
     url = f"{parameters.BASE_URL}/download-images?cod={cod}"
 
     img_bytes = generate_qr_code(url)
+
+    socketio.emit('render_images')
 
     return send_file(img_bytes, mimetype='image/png')
 
