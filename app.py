@@ -16,7 +16,7 @@ app = Flask(__name__)
 app.secret_key = 'dbsupersecretkey'
 socketio = SocketIO(app)
 
-udp_sender = UDPSender()
+udp_sender = UDPSender(port=parameters.UDP_PORT)
 
 valid_links = {}
 
@@ -132,8 +132,9 @@ def accept(link_id):
     if valid_links.get(link_id):
         valid_links[link_id] = False
         socketio.emit('invalidate_link', {'link_id': link_id}, to='/')
-        random_number = random.randint(10000, 99999) #-----------------------------------------------------------------------------------------------
-        return redirect(url_for('play', cod=1234))
+        random_number = 1234 # random.randint(1, 99999) #-----------------------------------------------------------------------------------------------
+        udp_sender.send(f"INI:{random_number:05d}\n")
+        return redirect(url_for('play', cod=random_number))
     else:
         return redirect(url_for('error'))
 
