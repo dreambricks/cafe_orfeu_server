@@ -1,5 +1,5 @@
 from flask_socketio import SocketIO, emit, join_room
-from flask import Flask, url_for, send_file, render_template, redirect, request, abort
+from flask import Flask, url_for, send_file, render_template, redirect, request, abort, jsonify
 
 import parameters
 import utils
@@ -99,10 +99,28 @@ def download_images():
     if not os.path.exists(folder_path) or not os.path.isdir(folder_path):
         abort(404, description="Folder not found.")
 
-    zip_buffer = utils.create_zip_of_images(folder_path)
+    # Lista todas as imagens na pasta
+    image_files = [f for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f))]
 
-    zip_filename = f"{cod}_images_cafeorfeu.zip"
-    return send_file(zip_buffer, mimetype='application/zip', as_attachment=True, download_name=zip_filename)
+    if not image_files:
+        abort(404, description="No images found.")
+
+    # Cria URLs para cada imagem
+    image_urls = [url_for('serve_image', cod=cod, filename=image, _external=True) for image in image_files]
+
+    # Retorna as URLs como uma lista em JSON
+    return jsonify(image_urls)
+
+
+@app.route('/images/<cod>/<filename>')
+def serve_image(cod, filename):
+    folder_path = os.path.join(IMAGE_BASE_FOLDER, cod)
+    file_path = os.path.join(folder_path, filename)
+
+    if not os.path.exists(file_path) or not os.path.isfile(file_path):
+        abort(404, description="Image not found.")
+
+    return send_file(file_path, mimetype='image/jpeg', as_attachment=True, download_name=filename)
 
 
 @app.route('/show_images/<cod>')
@@ -132,7 +150,7 @@ def accept(link_id):
     if valid_links.get(link_id):
         valid_links[link_id] = False
         socketio.emit('invalidate_link', {'link_id': link_id}, to='/')
-        random_number = 1234 # random.randint(1, 99999) #-----------------------------------------------------------------------------------------------
+        random_number = 1234  # random.randint(1, 99999)
         udp_sender.send(f"INI:{random_number:05d}\n")
         return redirect(url_for('play', cod=random_number))
     else:
