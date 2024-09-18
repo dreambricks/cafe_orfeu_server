@@ -60,6 +60,19 @@ def alive():
     return "Alive"
 
 
+@app.route("/cta", methods=['GET', 'POST'])
+def cta():
+    return render_template("cta.html")
+
+
+@app.route("/cta_send", methods=['GET', 'POST'])
+def cta_send():
+    message = "ok"
+    print(f"Sendind Message: {message}")
+    udp_sender.send(message)
+    return render_template("cta.html")
+
+
 @app.route('/generateqr', methods=['GET'])
 def generate():
     if len(valid_links) >= MAX_LINKS:
