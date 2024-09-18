@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/download-images-carousel.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/default.css') }}">
+    <title>Download</title>
+</head>
+
+<body>
+<div class="container">
+
+    <img class="logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Exemplo de imagem">
+
+    <div class="images-container">
+        {% if image_paths %}
+        {% for image_path in image_paths %}
+        <img src="{{ image_path }}" alt="Imagem {{ loop.index }}" class="{% if loop.first %}active{% endif %}">
+        {% endfor %}
+        {% else %}
+        <p>Nenhuma imagem encontrada para o código {{ cod }}.</p>
+        {% endif %}
+    </div>
+
+    <div class="download">
+        <a href="#" onclick="downloadAllImages('{{ cod }}')">
+            <img src="{{ url_for('static', filename='images/baixar_btn.png') }}" width="300px"
+                 alt="Descrição da imagem">
+        </a>
+    </div>
+
+    <!--    <div class="cancel">-->
+    <!--        <a href="{{ url_for('download_images', cod=cod) }}">-->
+    <!--            <button>Cancelar</button>-->
+    <!--        </a>-->
+    <!--    </div>-->
+
+</div>
+
+<script>
+    const images = document.querySelectorAll('.images-container img');
+    let currentIndex = 0;
+
+    function showNextImage() {
+
+        images[currentIndex].classList.remove('active');
+
+        currentIndex = (currentIndex + 1) % images.length;
+
+        images[currentIndex].classList.add('active');
+    }
+
+    setInterval(showNextImage, 2000);
+</script>
+
+<script>
+    function downloadAllImages(cod) {
+        fetch(`/download-images?cod=${cod}`)
+            .then(response => response.json())
+            .then(imageUrls => {
+            imageUrls.forEach(url => {
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = '';  // O navegador irá inferir o nome do arquivo automaticamente
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        })
+            .catch(error => console.error('Error downloading images:', error));
+    }
+</script>
+
+</body>
+</html>

@@ -137,6 +137,20 @@ def show_images(cod):
     return render_template('download-images.html', image_paths=image_paths, cod=cod)
 
 
+@app.route('/show_images_carousel/<cod>')
+def show_images_carousel(cod):
+    images_dir = os.path.join(app.static_folder, 'download_images', cod)
+
+    if not os.path.exists(images_dir):
+        abort(404)
+
+    image_files = [f for f in os.listdir(images_dir) if f.endswith(('.png', '.jpg', '.jpeg', '.gif'))]
+
+    image_paths = [url_for('static', filename=f'download_images/{cod}/{image_file}') for image_file in image_files]
+
+    return render_template('download-images-carousel.html', image_paths=image_paths, cod=cod)
+
+
 @app.route('/terms/<link_id>')
 def terms(link_id):
     if valid_links.get(link_id):
