@@ -8,7 +8,7 @@
     margin-top: 30px;
     overflow-y: scroll;
     -ms-overflow-style: none;
-    scrollbar-height: none;
+    scrollbar-width: none;
     box-sizing: border-box;
     border-bottom: 5px solid black;
     border-radius: 2px;
