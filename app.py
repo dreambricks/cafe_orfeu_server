@@ -90,7 +90,7 @@ def qrcode_images():
     if not cod:
         abort(400, description="O parâmetro 'cod' é obrigatório.")
 
-    url = f"{parameters.BASE_URL}/download-images?cod={cod}"
+    url = f"{parameters.BASE_URL}/show_images/{cod}"
 
     img_bytes = generate_qr_code(url)
 
