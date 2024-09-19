@@ -64,7 +64,7 @@ def alive():
 def cta():
     if request.method == "POST":
         print("Start application")
-        redirect(url_for('terms'))
+        return redirect(url_for('terms'))
     return render_template("cta.html")
 
 
@@ -163,7 +163,7 @@ def show_images_carousel(cod):
 #     else:
 #         return redirect(url_for('error'))
 
-@app.route('/terms/')
+@app.route('/terms')
 def terms():
     return render_template('terms.html')
 
@@ -181,8 +181,7 @@ def terms():
 
 @app.route('/accept', methods=['POST'])
 def accept():
-    random_number = 1234
-    #         random_number = 1234  # random.randint(1, 99999)
+    random_number = random.randint(1, 99999)
     udp_sender.send(f"INI:{random_number:05d}\n")
     return redirect(url_for('play', cod=random_number))
 
@@ -194,7 +193,7 @@ def play(cod):
 
 @app.route('/deny', methods=['POST'])
 def deny_btn():
-    return redirect(url_for('deny'))
+    return redirect(url_for('cta'))
 
 
 @app.route('/deny')

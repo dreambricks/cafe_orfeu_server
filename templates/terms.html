@@ -10,9 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
 </head>
 <script>
-
     var socket = io();
-
     var link_id = "{{ link_id }}";
 
     socket.on('invalidate_link', function(data) {
@@ -21,31 +19,49 @@
             window.location.href = "/link_invalid";
         }
     });
+
+    function toggleButton() {
+        const checkbox = document.getElementById('terms-checkbox');
+        const acceptButton = document.getElementById('accept-button');
+        acceptButton.disabled = !checkbox.checked;
+    }
 </script>
 <body>
 <div class="container">
+    <img class="logo" src="{{ url_for('static', filename='images/logo.png') }}">
 
-    <h1>Termos e Condições</h1>
+    <div class="container-items">
+        <div class="terms">
+            <h1>DISCLAIMER DE LGPD E OPT IN</h1>
+            <p>Lorem lorem lorem Lorem lorem loremLorem lorem loremLorem lorem lorem Lorem lorem loremLorem lorem
+                loremLorem lorem loremLorem lorem loremLorem lorem loremLorem lorem loremLorem lorem loremLorem lorem
+                loremLorem lorem loremLorem lorem loremLorem lorem loremLorem lorem loremLorem lorem lorem Lorem lorem
+                lorem</p>
+            <p>Lorem lorem lorem Lorem lorem loremLorem lorem loremLorem lorem loremLorem lorem loremLorem lorem
+                loremLorem lorem loremLorem lorem loremLorem lorem loremLorem lorem loremLorem lorem loremLorem lorem
+                loremLorem lorem loremLorem lorem loremLorem lorem lorem</p>
+            <p>Lorem lorem lorem Lorem lorem loremLorem lorem loremLorem lorem loremLorem lorem loremLorem lorem
+                loremLorem lorem loremLorem lorem loremLorem lorem loremLorem lorem loremLorem lorem loremLorem lorem
+                loremLorem lorem loremLorem lorem loremLorem lorem lorem</p>
+        </div>
 
-    <div class="terms">
-        <p>8. - O presente Termo é regido e interpretado de acordo com as leis da República Federativa do Brasil. As
-            partes elegem o foro central da Comarca da Capital da Cidade do Rio de Janeiro – RJ como o competente para
-            dirimir quaisquer controvérsias porventura oriundas deste Termo, com renúncia expressa a qualquer outro, por
-            mais privilegiado que seja.</p>
-    </div>
+        <div class="checkbox">
+            <input type="checkbox" id="terms-checkbox" onchange="toggleButton()">
+            <label for="terms-checkbox">Eu aceito os termos e condições</label>
+        </div>
 
-    <div class="buttons">
-        <form action="/accept/{{ link_id }}" method="POST">
-            <button class="button-accept" type="submit">Aceitar</button>
-        </form>
+        <div class="buttons">
+            <form action="/accept" method="POST">
+                <button class="button-accept" id="accept-button" type="submit" disabled>Aceitar</button>
+            </form>
 
-        <form action="/deny" method="POST">
-            <button class="button-deny" type="submit">Recusar</button>
-        </form>
+            <form action="/deny" method="POST">
+                <button class="button-deny" type="submit">Recusar</button>
+            </form>
+        </div>
     </div>
 
 </div>
-
 
 </body>
 </html>
