@@ -1,7 +1,5 @@
 .container-items {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+    margin-top: 40px;
 }
 
 .terms {
@@ -10,17 +8,20 @@
     margin-top: 30px;
     overflow-y: scroll;
     -ms-overflow-style: none;
-    scrollbar-width: none;
+    scrollbar-height: none;
     box-sizing: border-box;
     border-bottom: 5px solid black;
-    border-radius: 4px;
+    border-radius: 2px;
 }
 
 .terms p {
     font-size: 20px;
-    padding: 30px 20px 20px;
+    padding: 20px 20px 0px;
     max-height: 500px;
     text-align: justify;
+    font-family: "nave", sans-serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 .terms h1 {
@@ -28,16 +29,20 @@
     padding: 0px 20px 0px;
     max-height: 500px;
     text-align: justify;
+    font-family: "nave", sans-serif;
+    font-weight: 700;
+    font-style: normal;
 }
 
 .button-accept {
     padding: 1rem;
     width: 200px;
-    background-color: #008f28;
-    color: white;
-    font-weight: bold;
-    border-radius: 6px;
-    border: none;
+    background-color: #1c1c1c;
+    color: #e8d9b8;
+    border: 2px solid black;
+    font-family: "nave", sans-serif;
+    font-weight: 700;
+    font-style: normal;
 }
 
 button:disabled,
@@ -46,14 +51,15 @@ button[disabled]{
   color: #666666;
 }
 
-.button-deny{
+.button-deny {
     padding: 1rem;
     width: 200px;
-    background-color: #d20024;
-    color: white;
-    font-weight: bold;
-    border-radius: 6px;
-    border: none;
+    background-color: #e8d9b8;
+    color: #1c1c1c;
+    border: 2px solid black;
+    font-family: "nave", sans-serif;
+    font-weight: 700;
+    font-style: normal;
 }
 
 .buttons {
@@ -70,8 +76,11 @@ button[disabled]{
 }
 
 .checkbox label {
-    font-weight: bold;
+    font-family: "nave", sans-serif;
+    font-weight: 700;
+    font-style: normal;
 }
+
 
 
 

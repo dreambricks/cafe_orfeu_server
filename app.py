@@ -52,7 +52,7 @@ def remove_old_folders():
 
 @app.route('/')
 def index():
-    return "Alive"
+    return redirect(url_for("cta"))
 
 
 @app.route('/alive')

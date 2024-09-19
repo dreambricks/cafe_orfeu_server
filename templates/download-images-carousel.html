@@ -14,17 +14,20 @@
 
     <img class="logo" src="{{ url_for('static', filename='images/logo.png') }}">
 
-    <div class="images-container">
-        {% if image_paths %}
-        {% for image_path in image_paths %}
-        <img src="{{ image_path }}" alt="Imagem {{ loop.index }}" class="{% if loop.first %}active{% endif %}">
-        {% endfor %}
-        {% else %}
-        <p>Nenhuma imagem encontrada para o código {{ cod }}.</p>
-        {% endif %}
+    <div class="container-items">
+
+        <div class="images-container">
+            {% if image_paths %}
+            {% for image_path in image_paths %}
+            <img src="{{ image_path }}" alt="Imagem {{ loop.index }}" class="{% if loop.first %}active{% endif %}">
+            {% endfor %}
+            {% else %}
+            <p>Nenhuma imagem encontrada para o código {{ cod }}.</p>
+            {% endif %}
+        </div>
+
+        <img class="qrcode" src="/qrcode-images?cod={{ cod }}" width="40%">
     </div>
-    
-    <img class="qrcode" src="/qrcode-images?cod={{ cod }}" width="40%">
 
 
 </div>
@@ -43,6 +46,8 @@
     }
 
     setInterval(showNextImage, 2000);
+
+
 </script>
 
 

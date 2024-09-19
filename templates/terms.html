@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/terms.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/default.css') }}">
+    <link rel="stylesheet" href="https://use.typekit.net/nsl6jfv.css">
     <title>Termos e Condições</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
 </head>
@@ -25,6 +26,9 @@
         const acceptButton = document.getElementById('accept-button');
         acceptButton.disabled = !checkbox.checked;
     }
+
+
+
 </script>
 <body>
 <div class="container">
@@ -51,12 +55,13 @@
         </div>
 
         <div class="buttons">
-            <form action="/accept" method="POST">
-                <button class="button-accept" id="accept-button" type="submit" disabled>Aceitar</button>
-            </form>
 
             <form action="/deny" method="POST">
-                <button class="button-deny" type="submit">Recusar</button>
+                <button class="button-deny" type="submit">Voltar</button>
+            </form>
+
+            <form action="/accept" method="POST">
+                <button class="button-accept" id="accept-button" type="submit" disabled>Avançar</button>
             </form>
         </div>
     </div>
