@@ -23,6 +23,16 @@
     </style>
 </head>
 <body>
-    <div class="full-screen-image" onclick="window.location.href='/cta_send';"></div>
+    <div class="full-screen-image" onclick="sendPostRequest()"></div>
+
+    <form id="postForm" action="/cta" method="POST" style="display: none;">
+
+    </form>
+
+    <script>
+        function sendPostRequest() {
+            document.getElementById("postForm").submit();
+        }
+    </script>
 </body>
 </html>

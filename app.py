@@ -62,14 +62,9 @@ def alive():
 
 @app.route("/cta", methods=['GET', 'POST'])
 def cta():
-    return render_template("cta.html")
-
-
-@app.route("/cta_send", methods=['GET', 'POST'])
-def cta_send():
-    message = "ok"
-    print(f"Sendind Message: {message}")
-    udp_sender.send(message)
+    if request.method == "POST":
+        print("Start application")
+        redirect(url_for('terms'))
     return render_template("cta.html")
 
 
@@ -112,16 +107,13 @@ def download_images():
     if not os.path.exists(folder_path) or not os.path.isdir(folder_path):
         abort(404, description="Folder not found.")
 
-    # Lista todas as imagens na pasta
     image_files = [f for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f))]
 
     if not image_files:
         abort(404, description="No images found.")
 
-    # Cria URLs para cada imagem
     image_urls = [url_for('serve_image', cod=cod, filename=image, _external=True) for image in image_files]
 
-    # Retorna as URLs como uma lista em JSON
     return jsonify(image_urls)
 
 
@@ -164,24 +156,35 @@ def show_images_carousel(cod):
     return render_template('download-images-carousel.html', image_paths=image_paths, cod=cod)
 
 
-@app.route('/terms/<link_id>')
-def terms(link_id):
-    if valid_links.get(link_id):
-        return render_template('terms.html', link_id=link_id)
-    else:
-        return redirect(url_for('error'))
+# @app.route('/terms/<link_id>')
+# def terms(link_id):
+#     if valid_links.get(link_id):
+#         return render_template('terms.html', link_id=link_id)
+#     else:
+#         return redirect(url_for('error'))
+
+@app.route('/terms/')
+def terms():
+    return render_template('terms.html')
 
 
-@app.route('/accept/<link_id>', methods=['POST'])
-def accept(link_id):
-    if valid_links.get(link_id):
-        valid_links[link_id] = False
-        socketio.emit('invalidate_link', {'link_id': link_id}, to='/')
-        random_number = 1234  # random.randint(1, 99999)
-        udp_sender.send(f"INI:{random_number:05d}\n")
-        return redirect(url_for('play', cod=random_number))
-    else:
-        return redirect(url_for('error'))
+# @app.route('/accept/<link_id>', methods=['POST'])
+# def accept(link_id):
+#     if valid_links.get(link_id):
+#         valid_links[link_id] = False
+#         socketio.emit('invalidate_link', {'link_id': link_id}, to='/')
+#         random_number = 1234  # random.randint(1, 99999)
+#         udp_sender.send(f"INI:{random_number:05d}\n")
+#         return redirect(url_for('play', cod=random_number))
+#     else:
+#         return redirect(url_for('error'))
+
+@app.route('/accept', methods=['POST'])
+def accept():
+    random_number = 1234
+    #         random_number = 1234  # random.randint(1, 99999)
+    udp_sender.send(f"INI:{random_number:05d}\n")
+    return redirect(url_for('play', cod=random_number))
 
 
 @app.route('/play/<cod>')
