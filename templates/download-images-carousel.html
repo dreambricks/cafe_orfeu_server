@@ -6,13 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/download-images-carousel.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/default.css') }}">
+    <link rel="stylesheet" href="https://use.typekit.net/nsl6jfv.css">
     <title>Download</title>
 </head>
 
 <body>
 <div class="container">
 
-    <img class="logo" src="{{ url_for('static', filename='images/logo.png') }}">
+    <img class="logo" src="{{ url_for('static', filename='images/logo2.png') }}">
 
     <img class="logo" src="{{ url_for('static', filename='images/beba_dessa_arte_v01.png') }}">
 
@@ -28,7 +29,16 @@
             {% endif %}
         </div>
 
+        <p>Escaneie para salvar sua foto.</p>
+
         <img class="qrcode" src="/qrcode-images?cod={{ cod }}" width="40%">
+
+
+        <div class="share">
+            <p>Compartilhe usando <span class="span-green">#BebaDessaArte</span></p>
+            <p>e marque <span class="span-green">@orfeucafes</span></p>
+        </div>
+
     </div>
 
 
