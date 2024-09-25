@@ -7,15 +7,33 @@
     height: 450px;
     margin-top: 30px;
     overflow-y: scroll;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
     box-sizing: border-box;
     border-bottom: 5px solid black;
     border-radius: 2px;
 }
 
+.terms::-webkit-scrollbar {
+    width: 6px;
+}
+
+.terms::-webkit-scrollbar-track {
+    background: #f1f1f100;
+    border-radius: 10px;
+}
+
+.terms::-webkit-scrollbar-thumb {
+    background-color: black;
+    border-radius: 10px;
+    border: 2px solid #f1f1f100;
+}
+
+.terms::-webkit-scrollbar-thumb:hover {
+    background: #333;
+}
+
+
 .terms p {
-    font-size: 20px;
+    font-size: 16px;
     padding: 20px 20px 0px;
     max-height: 500px;
     text-align: justify;
@@ -25,7 +43,7 @@
 }
 
 .terms h1 {
-    font-size: 24px;
+    font-size: 20px;
     padding: 0px 20px 0px;
     max-height: 500px;
     text-align: justify;
@@ -47,8 +65,8 @@
 
 button:disabled,
 button[disabled]{
-  background-color: #cccccc;
-  color: #666666;
+    background-color: #cccccc;
+    color: #666666;
 }
 
 .button-deny {
@@ -57,6 +75,12 @@ button[disabled]{
     background-color: #e8d9b8;
     color: #1c1c1c;
     border: 2px solid black;
+    font-family: "nave", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+strong {
     font-family: "nave", sans-serif;
     font-weight: 700;
     font-style: normal;
@@ -71,14 +95,58 @@ button[disabled]{
     box-sizing: border-box;
 }
 
+/* Remove o fundo padrão do checkbox */
+.checkbox input[type="checkbox"] {
+    -webkit-appearance: none; /* Remove o estilo padrão do checkbox */
+    appearance: none; /* Para outros navegadores */
+    width: 20px; /* Largura do checkbox */
+    height: 20px; /* Altura do checkbox */
+    border: 2px solid #000; /* Borda do checkbox */
+    border-radius: 3px; /* Bordas arredondadas */
+    background-color: transparent; /* Fundo transparente */
+    position: relative; /* Para posicionar o pseudo-elemento */
+    cursor: pointer; /* Muda o cursor ao passar sobre o checkbox */
+}
+
+/* Estilo do checkbox quando está marcado */
+.checkbox input[type="checkbox"]:checked {
+    background-color: transparent; /* Fundo ainda transparente quando marcado */
+    border: 2px solid #000000; /* Muda a cor da borda quando marcado */
+}
+
+/* Pseudo-elemento para exibir o SVG quando o checkbox está marcado */
+.checkbox input[type="checkbox"]:checked::before {
+    content: '';
+    position: absolute; /* Posiciona o SVG em relação ao checkbox */
+    top: 0; /* Alinha ao topo do checkbox */
+    left: 0; /* Alinha à esquerda do checkbox */
+    width: 20px; /* Largura do SVG */
+    height: 20px; /* Altura do SVG */
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="000"><path d="M9 19l-7-7 1.414-1.414L9 16.172l12.586-12.586L23 5l-14 14z"/></svg>');
+    background-size: contain; /* Ajusta o SVG para caber no checkbox */
+    background-repeat: no-repeat; /* Não repete o SVG */
+}
+
+/* Estilo do label */
+.checkbox label {
+    cursor: pointer; /* Muda o cursor ao passar sobre o label */
+}
+
 .checkbox {
+    gap: 8px;
+    display: flex;
     margin-top: 20px;
+    align-items: flex-end;
 }
 
 .checkbox label {
     font-family: "nave", sans-serif;
     font-weight: 700;
     font-style: normal;
+}
+
+.logo {
+    width: 35%;
 }
 
 
