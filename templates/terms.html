@@ -11,6 +11,31 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
 </head>
 <script>
+    // Define o tempo em segundos
+    let timer = "{{ timer }}"; // Certifique-se de que o valor é passado corretamente
+    let tempo = parseInt(timer, 10);
+
+    // Verifica se o tempo é um número válido e não é negativo
+    if (isNaN(tempo) || tempo < 0) {
+        console.error('Valor de timer inválido. Usando 0 como padrão.');
+        tempo = 0;
+    }
+
+    function iniciarTimer() {
+        const intervalo = setInterval(() => {
+            if (tempo <= 0) {
+                clearInterval(intervalo);
+                window.location.href = "/logs/timeout/TERMOS_ABANDONADO";
+            } else {
+                tempo--;
+            }
+            console.log(tempo);
+        }, 1000);
+    }
+
+    window.onload = iniciarTimer;
+</script>
+<script>
     var socket = io();
     var link_id = "{{ link_id }}";
 
@@ -109,7 +134,8 @@
 
         <div class="checkbox">
             <input type="checkbox" id="terms-checkbox" onchange="toggleButton()">
-            <label for="terms-checkbox">Declaro que li e concordo com os termos de autorização para uso da imagem pessoal</label>
+            <label for="terms-checkbox">Declaro que li e concordo com os termos de autorização para uso da imagem
+                pessoal</label>
         </div>
 
         <div class="buttons">

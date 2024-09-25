@@ -3,7 +3,7 @@ from flask import Flask, url_for, send_file, render_template, redirect, request,
 
 import parameters
 import utils
-from log_sender import init_csv, csv_filename, backup_filename, process_csv_and_send_logs
+from log_sender import init_csv, csv_filename, backup_filename, process_csv_and_send_logs, save_csv
 from qrcodeaux import generate_qr_code
 from udp_sender import UDPSender
 import uuid
@@ -172,7 +172,9 @@ def show_images_carousel(cod):
 
 @app.route('/terms')
 def terms():
-    return render_template('terms.html')
+    timer = parameters.TIMER_TERMS
+    print(timer)
+    return render_template('terms.html', timer=timer)
 
 
 # @app.route('/accept/<link_id>', methods=['POST'])
@@ -198,8 +200,15 @@ def play(cod):
     return render_template('play.html', cod=cod)
 
 
+@app.route('/logs/timeout/<status>')
+def send_log(status):
+    save_csv(status)
+    return redirect(url_for('cta'))
+
+
 @app.route('/deny', methods=['POST'])
 def deny_btn():
+    save_csv("TERMOS_NAO_ACEITO")
     return redirect(url_for('cta'))
 
 

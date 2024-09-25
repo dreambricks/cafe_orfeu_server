@@ -28,10 +28,12 @@ def save_csv(status):
     with open(csv_filename, mode='a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([status, project, additional, time_played])
+    print(f"{time_played} - {status} - salvo com sucesso!")
 
 
 def send_log(status, project, additional, time_played):
     url = parameters.LOG_API + "/datalog/upload"
+    timestamp = datetime.now()
     data = {
         'status': status,
         'project': project,
@@ -42,13 +44,13 @@ def send_log(status, project, additional, time_played):
     try:
         response = requests.post(url, data=data)
         if response.status_code == 200:
-            print('Requisição bem-sucedida')
+            print(f'{timestamp} - Requisição bem-sucedida')
             return True
         else:
-            print('Falha na requisição:', response.status_code)
+            print(f'{timestamp} -  Falha na requisição:', response.status_code)
             return False
     except requests.exceptions.ConnectionError:
-        print('Falha na conexão: Não foi possível conectar ao servidor')
+        print(f'{timestamp} - Falha na conexão: Não foi possível conectar ao servidor')
         return False
 
 
@@ -76,4 +78,4 @@ def process_csv_and_send_logs(csv_filename, backup_filename):
             writer = csv.DictWriter(file, fieldnames=fieldnames)
             writer.writerows(rows_to_backup)
 
-        time.sleep(10)
+        time.sleep(120)
