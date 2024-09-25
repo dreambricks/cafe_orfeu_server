@@ -146,6 +146,9 @@ def show_images(cod):
 
     image_paths = [url_for('static', filename=f'download_images/{cod}/{image_file}') for image_file in image_files]
 
+    udp_sender.send(f"SCAN:{cod}\n")
+    save_csv("ESCANEOU_QRCODE")
+
     return render_template('download-images.html', image_paths=image_paths, cod=cod)
 
 
