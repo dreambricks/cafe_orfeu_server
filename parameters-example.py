@@ -1,0 +1,6 @@
+BASE_URL = ""
+DIRECTORY = ""
+UDP_PORT = 0
+LOG_API = ""
+LOG_BACKUP_FILE = ""
+LOG_PROJECT_ID = ""

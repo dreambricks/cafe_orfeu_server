@@ -158,3 +158,5 @@ fullchain.pem
 privkey.pem
 
 keys/
+
+parameters.py

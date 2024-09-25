@@ -3,6 +3,7 @@ from flask import Flask, url_for, send_file, render_template, redirect, request,
 
 import parameters
 import utils
+from log_sender import init_csv, csv_filename, backup_filename, process_csv_and_send_logs
 from qrcodeaux import generate_qr_code
 from udp_sender import UDPSender
 import uuid
@@ -11,6 +12,7 @@ import time
 import shutil
 import random
 from apscheduler.schedulers.background import BackgroundScheduler
+import threading
 
 app = Flask(__name__)
 app.secret_key = 'dbsupersecretkey'
@@ -23,6 +25,9 @@ valid_links = {}
 MAX_LINKS = 5
 
 IMAGE_BASE_FOLDER = os.path.join(app.root_path, 'static', 'download_images')
+
+init_csv(csv_filename)
+init_csv(backup_filename)
 
 
 def remove_old_folders():
@@ -48,6 +53,8 @@ def remove_old_folders():
 # scheduler = BackgroundScheduler()
 # scheduler.add_job(remove_old_folders, 'interval', minutes=2)
 # scheduler.start()
+
+threading.Thread(target=process_csv_and_send_logs, args=(csv_filename, backup_filename), daemon=True).start()
 
 
 @app.route('/')
