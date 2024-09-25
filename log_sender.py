@@ -78,4 +78,4 @@ def process_csv_and_send_logs(csv_filename, backup_filename):
             writer = csv.DictWriter(file, fieldnames=fieldnames)
             writer.writerows(rows_to_backup)
 
-        time.sleep(120)
+        time.sleep(5)
