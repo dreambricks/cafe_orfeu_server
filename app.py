@@ -13,6 +13,7 @@ import shutil
 import random
 from apscheduler.schedulers.background import BackgroundScheduler
 import threading
+from stable_swarm_api import StableSwarmAPI
 
 app = Flask(__name__)
 app.secret_key = 'dbsupersecretkey'
@@ -28,6 +29,8 @@ IMAGE_BASE_FOLDER = os.path.join(app.root_path, 'static', 'download_images')
 
 init_csv(csv_filename)
 init_csv(backup_filename)
+
+ss_api = StableSwarmAPI(parameters.STABLE_SWARM_API_URL, parameters.STABLE_SWARM_BASE_FOLDER)
 
 
 def remove_old_folders():
@@ -219,6 +222,37 @@ def deny_btn():
 def deny():
     return render_template("deny.html")
 
+
+def process_image(path_to_image, config_idx, out_folder):
+    if not os.path.isfile(path_to_image):
+        return "ERROR"
+
+    photo = os.path.basename(path_to_image)
+    out_image_filename = ss_api.generate_image2(config_idx, image_filename=path_to_image)
+    out_photo = f'cfg{config_idx:02d}_{photo.replace(".jpg", ".png")}'
+    move_to_filename = os.path.join(out_folder, out_photo)
+
+    shutil.copy(out_image_filename, move_to_filename)
+
+    print(move_to_filename)
+    print(f"UDP Sending: {move_to_filename}" )
+    udp_sender.send(f"GENERATED:{move_to_filename}\n")
+
+
+@app.route('/ai/<path_to_image>')
+def generate_ai(path_to_image):
+    config_idx = 4
+    path_to_image = str(path_to_image).replace("@", "/")
+
+    out_folder = os.path.dirname(path_to_image)
+
+    if not os.path.isfile(path_to_image):
+        return "ERROR"
+
+    thread = threading.Thread(target=process_image, args=(path_to_image, config_idx, out_folder))
+    thread.start()
+
+    return "PROCESSING"
 
 @app.route('/error')
 def error():
