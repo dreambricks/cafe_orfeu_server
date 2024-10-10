@@ -31,6 +31,20 @@ def save_csv(status):
     print(f"{time_played} - {status} - salvo com sucesso!")
 
 
+def save_csv_additional(status, additional_send):
+    time_played = datetime.now()
+    formatted_time_played = time_played.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    project = parameters.LOG_PROJECT_ID
+    additional = additional_send
+    time_played = formatted_time_played
+
+    with open(csv_filename, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([status, project, additional, time_played])
+    print(f"{time_played} - {status} - salvo com sucesso!")
+
+
 def send_log(status, project, additional, time_played):
     url = parameters.LOG_API + "/datalog/upload"
     timestamp = datetime.now()
@@ -78,4 +92,4 @@ def process_csv_and_send_logs(csv_filename, backup_filename):
             writer = csv.DictWriter(file, fieldnames=fieldnames)
             writer.writerows(rows_to_backup)
 
-        time.sleep(5)
+        time.sleep(120)

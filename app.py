@@ -3,7 +3,7 @@ from flask import Flask, url_for, send_file, render_template, redirect, request,
 
 import parameters
 import utils
-from log_sender import init_csv, csv_filename, backup_filename, process_csv_and_send_logs, save_csv
+from log_sender import init_csv, csv_filename, backup_filename, process_csv_and_send_logs, save_csv, save_csv_additional
 from qrcodeaux import generate_qr_code
 from udp_sender import UDPSender
 import uuid
@@ -31,6 +31,9 @@ init_csv(csv_filename)
 init_csv(backup_filename)
 
 ss_api = StableSwarmAPI(parameters.STABLE_SWARM_API_URL, parameters.STABLE_SWARM_BASE_FOLDER)
+
+gender = ""
+age = ""
 
 
 def remove_old_folders():
@@ -222,13 +225,13 @@ def deny_btn():
 def deny():
     return render_template("deny.html")
 
-
 def process_image(path_to_image, config_idx, out_folder):
     if not os.path.isfile(path_to_image):
         return "ERROR"
 
     photo = os.path.basename(path_to_image)
     out_image_filename = ss_api.generate_image2(config_idx, image_filename=path_to_image)
+    global gender, age
     gender = "Nao reconhecido"
     if ss_api.last_gender == "Man":
         gender = "Homem"
@@ -262,6 +265,12 @@ def generate_ai(path_to_image):
     thread.start()
 
     return "PROCESSING"
+
+@app.route('/logs/finish/<status>')
+def finish(status):
+    additional_send = f"{gender} - {age}"
+    save_csv_additional(status, additional_send)
+    return redirect(url_for('cta'))
 
 @app.route('/error')
 def error():
