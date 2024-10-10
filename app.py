@@ -229,6 +229,14 @@ def process_image(path_to_image, config_idx, out_folder):
 
     photo = os.path.basename(path_to_image)
     out_image_filename = ss_api.generate_image2(config_idx, image_filename=path_to_image)
+    gender = "Nao reconhecido"
+    if ss_api.last_gender == "Man":
+        gender = "Homem"
+    elif ss_api.last_gender == "Woman":
+        gender = "Mulher"
+    age = ss_api.last_age
+    print(f"Genero: {gender}, Idade: {age}")
+    
     out_photo = f'cfg{config_idx:02d}_{photo.replace(".jpg", ".png")}'
     move_to_filename = os.path.join(out_folder, out_photo)
 
@@ -241,14 +249,15 @@ def process_image(path_to_image, config_idx, out_folder):
 
 @app.route('/ai/<path_to_image>')
 def generate_ai(path_to_image):
-    config_idx = 4
-    path_to_image = str(path_to_image).replace("@", "/")
+    config_idx = parameters.CONFIG_INDEX
+    path_to_image = str(path_to_image).replace("@", "\\")
 
     out_folder = os.path.dirname(path_to_image)
 
     if not os.path.isfile(path_to_image):
         return "ERROR"
 
+    time.sleep(0.3)
     thread = threading.Thread(target=process_image, args=(path_to_image, config_idx, out_folder))
     thread.start()
 

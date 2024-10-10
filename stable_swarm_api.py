@@ -13,6 +13,8 @@ class StableSwarmAPI:
         self.base_folder = base_folder
         self.session_id = self.get_session_id()
         self.deepface = DeepFace
+        self.last_gender = ""
+        self.last_age = -1
 
     def get_deepface(self, img_path):
         #obj = self.deepface.analyze(img_path, actions=['age', 'gender', 'race', 'emotion'])
@@ -27,16 +29,19 @@ class StableSwarmAPI:
             gender = "Man"
         elif df['gender']['Woman'] > 80.0:
             gender = "Woman"
+        self.last_gender = gender
         return gender
 
     def get_age_string(self, df):
         result = ""
         if 'age' in df:
             result = f"{df['age']} years old"
+            self.last_age = df['age']
         return result
 
     def get_add_info(self, img_path):
-        #return ""
+        self.last_gender = ""
+        self.last_age = -1
         try:
             df = self.get_deepface(img_path)
             prompt = ""
