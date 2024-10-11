@@ -155,6 +155,25 @@ strong {
     width: 35%;
 }
 
+.toast {
+    visibility: hidden; /* Oculto por padrão */
+    color: #ff0000;
+    text-align: center;
+    border-radius: 4px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    top:  36%;
+    bottom: 30px;
+    font-size: 17px;
+    opacity: 0;
+    transition: opacity 0.5s, visibility 0.5s;
+}
 
+/* Quando o toast estiver visível */
+.toast.show {
+    visibility: visible;
+    opacity: 1; /* Defina a opacidade para 1 */
+}
 
 

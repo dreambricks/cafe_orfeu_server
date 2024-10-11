@@ -33,7 +33,7 @@
 
 button {
     background-color: #00000000;
-    color: #fff;
+    color: #040707;
     border: none;
     padding: 10px;
     border-radius: 5px;
@@ -46,6 +46,7 @@ button {
 
 button:hover {
     background-color: #444;
+    color: #fff;
 }
 
 button svg {
