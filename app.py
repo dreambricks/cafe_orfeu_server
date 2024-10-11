@@ -56,9 +56,9 @@ def remove_old_folders():
                 print(f'A pasta "{foldername}" foi criada há menos de {minutes} minutos.')
 
 
-# scheduler = BackgroundScheduler()
-# scheduler.add_job(remove_old_folders, 'interval', minutes=2)
-# scheduler.start()
+scheduler = BackgroundScheduler()
+scheduler.add_job(remove_old_folders, 'interval', minutes=2)
+scheduler.start()
 
 threading.Thread(target=process_csv_and_send_logs, args=(csv_filename, backup_filename), daemon=True).start()
 
