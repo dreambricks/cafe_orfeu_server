@@ -108,6 +108,12 @@ strong {
     cursor: pointer; /* Muda o cursor ao passar sobre o checkbox */
 }
 
+.checkbox input[type="checkbox"]:disabled {
+    border: 2px solid #000000; /* Cor da borda quando desabilitado */
+    background-color: #cacaca; /* Cor de fundo opcional ao desabilitar */
+    cursor: not-allowed; /* Muda o cursor para indicar que está desabilitado */
+}
+
 /* Estilo do checkbox quando está marcado */
 .checkbox input[type="checkbox"]:checked {
     background-color: transparent; /* Fundo ainda transparente quando marcado */

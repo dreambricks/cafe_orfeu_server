@@ -11,49 +11,65 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
 </head>
 <script>
-    // Define o tempo em segundos
-    let timer = "{{ timer }}"; // Certifique-se de que o valor é passado corretamente
-    let tempo = parseInt(timer, 10);
+    var socket = io();
+    var link_id = "{{ link_id }}";
 
-    // Verifica se o tempo é um número válido e não é negativo
-    if (isNaN(tempo) || tempo < 0) {
-        console.error('Valor de timer inválido. Usando 0 como padrão.');
-        tempo = 0;
+    // Função para monitorar a rolagem do container dos termos
+    function monitorarRolagem() {
+        const terms = document.querySelector('.terms'); // Seleciona o contêiner dos termos
+        const checkbox = document.getElementById('terms-checkbox'); // Seleciona o checkbox
+
+        // Adiciona o evento de rolagem no container dos termos
+        terms.addEventListener('scroll', function() {
+            // Verifica se o usuário chegou ao final do container
+            if (terms.scrollTop + terms.clientHeight >= terms.scrollHeight - 10) {
+                // Tolerância de 10px para garantir que funcione em todos os navegadores
+                checkbox.disabled = false; // Habilita o checkbox
+            }
+        });
     }
 
+    // Função para habilitar o botão de aceite quando o checkbox é clicado
+    function toggleButton() {
+        const checkbox = document.getElementById('terms-checkbox');
+        const acceptButton = document.getElementById('accept-button');
+        acceptButton.disabled = !checkbox.checked; // Habilita o botão apenas se o checkbox estiver marcado
+    }
+
+    // Função para iniciar o timer
     function iniciarTimer() {
+        let tempo = parseInt("{{ timer }}", 10);
+        if (isNaN(tempo) || tempo < 0) {
+            tempo = 0; // Define 0 se o tempo for inválido
+        }
+
         const intervalo = setInterval(() => {
             if (tempo <= 0) {
                 clearInterval(intervalo);
                 window.location.href = "/logs/timeout/TERMOS_ABANDONADO";
             } else {
                 tempo--;
+                console.log(tempo);
             }
-            console.log(tempo);
         }, 1000);
     }
 
-    window.onload = iniciarTimer;
-</script>
-<script>
-    var socket = io();
-    var link_id = "{{ link_id }}";
+    // Executa ao carregar a página
+    window.onload = function() {
+        iniciarTimer();  // Iniciar o timer
+        monitorarRolagem();  // Monitorar a rolagem dos termos
+    };
 
+    // Invalida o link se for recebido um evento 'invalidate_link' via socket
     socket.on('invalidate_link', function(data) {
         if (data.link_id === link_id) {
             alert("Este link não é mais válido.");
             window.location.href = "/link_invalid";
         }
     });
-
-    function toggleButton() {
-        const checkbox = document.getElementById('terms-checkbox');
-        const acceptButton = document.getElementById('accept-button');
-        acceptButton.disabled = !checkbox.checked;
-    }
-
-
 </script>
+
+
 <body>
 <div class="container">
     <img class="logo" src="{{ url_for('static', filename='images/logo.png') }}">
@@ -133,10 +149,11 @@
         </div>
 
         <div class="checkbox">
-            <input type="checkbox" id="terms-checkbox" onchange="toggleButton()">
+            <input type="checkbox" id="terms-checkbox" onchange="toggleButton()" disabled>
             <label for="terms-checkbox">Declaro que li e concordo com os termos de autorização para uso da imagem
                 pessoal</label>
         </div>
+
 
         <div class="buttons">
 

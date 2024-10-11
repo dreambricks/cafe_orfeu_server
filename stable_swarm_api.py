@@ -53,7 +53,7 @@ class StableSwarmAPI:
             age = self.get_age_string(df)
             if age != "":
                 print(age)
-                prompt = prompt + age + ", "
+                #prompt = prompt + age + ", "
 
             return prompt
         except ValueError:
@@ -160,7 +160,7 @@ class StableSwarmAPI:
 
         #print(payload)
         response = requests.post(url, headers=headers, json=payload)
-        #print(response.text)  # Print the error message from the API
+        print(response.text)  # Print the error message from the API
 
         if response.status_code == 200:
             # Extract image data from the response
