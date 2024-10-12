@@ -230,7 +230,7 @@ def process_image(path_to_image, config_idx, out_folder):
         return "ERROR"
 
     photo = os.path.basename(path_to_image)
-    out_image_filename = ss_api.generate_image2(config_idx, image_filename=path_to_image)
+    out_image_filename = ss_api.generate_image(config_idx, image_filename=path_to_image)
     global gender, age
     gender = "Nao reconhecido"
     if ss_api.last_gender == "Man":

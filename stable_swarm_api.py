@@ -81,67 +81,7 @@ class StableSwarmAPI:
         return data["session_id"]
 
 
-    def generate_image(self, prompt, neg_prompt, image_filename):
-        resource = "/API/GenerateText2Image"
-        url = self.api_url + resource
-        headers = {
-            "Content-Type": "application/json"
-        }
-
-        image_input = self.img_to_base64(image_filename)
-
-        # Define the payload with the parameters for image generation
-        payload = {
-            "session_id": self.session_id,
-            "images": 1,
-            "steps": 15,  # Number of diffusion steps
-            "cfg_scale": 7,  # Classifier-free guidance scale
-            "prompt": prompt,
-            "negativeprompt": neg_prompt,
-            "model": "juggernautXL_juggXIByRundiffusion",
-            "width": 1024,
-            "height": 1024,
-            "sampler": "dpmpp_sde",
-            "refinervae": "vaeFtMse840000EmaPruned_vaeFtMse840k",
-            "refinercontrolpercentage": 0.2,
-            "refinermethod": "PostApply",
-            "refinerupscalemethod": "pixel - lanczos",
-            "seed": 440794203,  # Set to None for random seed generation
-            "loras": "OIL_ON_CANVAS_v3",
-            "loraweights": 1.0,
-            "controlnetimageinput": image_input,
-            "controlnetpreprocessor": "CannyEdgePreprocessor",
-            "controlnetmodel": "controlnetxlCNXL_saiCanny",
-            "controlnetstrength": 0.6,
-            "initimage": image_input,
-            "initimagecreativity": 0.4,
-            "maskblur": 4,
-            "automaticvae": True
-        }
-
-        #print(payload)
-        response = requests.post(url, headers=headers, json=payload)
-        print(response.text)  # Print the error message from the API
-
-        if response.status_code == 200:
-            # Extract image data from the response
-            image_data = response.json()["images"]  # Assuming the response returns a base64-encoded image
-            image_filename = image_data[0].replace("View/", "Output/")
-            image_filename = os.path.join(self.base_folder, image_filename)
-            print(image_filename)
-            # Decode the base64-encoded image and save it as a file
-            #image_bytes = base64.b64decode(image_data)
-
-            #with open("swarm_generated_image.png", "wb") as img_file:
-            #    img_file.write(image_bytes)
-
-            print("Image generated successfully and saved as swarm_generated_image.png")
-            return image_filename
-        else:
-            print(f"Failed to generate image. Status code: {response.status_code}")
-
-
-    def generate_image2(self, config_idx, image_filename):
+    def generate_image(self, config_idx, image_filename):
         start_time = time.time()
         resource = "/API/GenerateText2Image"
         url = self.api_url + resource
