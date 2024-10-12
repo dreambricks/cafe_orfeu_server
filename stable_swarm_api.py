@@ -11,7 +11,7 @@ class StableSwarmAPI:
     def __init__(self, api_url, base_folder):
         self.api_url = api_url
         self.base_folder = base_folder
-        self.session_id = self.get_session_id()
+        self.session_id = ""
         self.deepface = DeepFace
         self.last_gender = ""
         self.last_age = -1
@@ -60,7 +60,7 @@ class StableSwarmAPI:
             return ""
 
 
-    def get_session_id(self):
+    def get_session_id_from_ss(self):
         resource = "/API/GetNewSession"
         headers = {
             "Content-Type": "application/json"
@@ -70,18 +70,26 @@ class StableSwarmAPI:
 
         url = self.api_url + resource
 
-        response = requests.post(url, headers=headers, json=payload)
-        print(response.text)
+        try:
+            response = requests.post(url, headers=headers, json=payload)
+            print(response.text)
 
-        if response.status_code != 200:
-            print("Error! " + response.text)
+            if response.status_code != 200:
+                print("Error! " + response.text)
+                return ""
+
+            data = json.loads(response.text)
+            return data["session_id"]
+        except:
             return ""
 
-        data = json.loads(response.text)
-        return data["session_id"]
+    def get_session_id(self):
+        if self.session_id == "":
+            self.session_id = self.get_session_id_from_ss()
+        return self.session_id
 
 
-    def generate_image(self, config_idx, image_filename):
+    def generate_image_ss(self, config_idx, image_filename):
         start_time = time.time()
         resource = "/API/GenerateText2Image"
         url = self.api_url + resource
@@ -93,7 +101,7 @@ class StableSwarmAPI:
 
         # Define the payload with the parameters for image generation
         payload = copy.copy(model_configs[config_idx])
-        payload["session_id"] = self.session_id
+        payload["session_id"] = self.get_session_id()
         payload["prompt"] = self.get_add_info(image_filename) + payload["prompt"]
         payload["controlnetimageinput"] = image_input
         payload["initimage"] = image_input
@@ -121,6 +129,14 @@ class StableSwarmAPI:
         else:
             print(f"Failed to generate image. Status code: {response.status_code}")
 
+    def generate_image(self, config_idx, image_filename):
+        try:
+            return self.generate_image_ss(config_idx, image_filename)
+        except:
+            # try again with a new session id
+            self.session_id = self.get_session_id_from_ss()
+            return self.generate_image_ss(config_idx, image_filename)
+        return ""
 
     def img_to_base64(self, image_filename):
         encoded_string = ""
