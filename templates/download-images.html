@@ -15,13 +15,11 @@
     <img class="logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Exemplo de imagem">
 
     <div class="images-container">
-        {% if image_paths %}
-        {% for image_path in image_paths %}
+        {% if image_paths and image_paths|length > 0 %}
         <div class="image-item">
-            <img src="{{ image_path }}" alt="Imagem {{ loop.index }}">
+            <img src="{{ image_paths[0] }}" alt="">
 
-            <button onclick="downloadImage('{{ image_path }}')">
-
+            <button onclick="downloadImage('{{ image_paths[0] }}')">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -30,14 +28,14 @@
                 </svg>
             </button>
         </div>
-        {% endfor %}
         {% else %}
         <p>Nenhuma imagem encontrada para o código {{ cod }}.</p>
         {% endif %}
     </div>
 
+
     <div class="download">
-        <a href="#" onclick="downloadAllImages('{{ cod }}')">
+        <a href="#" onclick="downloadImage('{{ image_paths[0] }}')">
             <img src="{{ url_for('static', filename='images/baixar_btn.png') }}" width="300px"
                  alt="Baixar todas as imagens">
         </a>
