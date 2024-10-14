@@ -21,9 +21,10 @@
 
         <div class="images-container">
             {% if image_paths %}
-            {% for image_path in image_paths %}
-            <img src="{{ image_path }}" alt="Imagem {{ loop.index }}" class="{% if loop.first %}active{% endif %}">
-            {% endfor %}
+<!--            {% for image_path in image_paths %}-->
+<!--            <img src="{{ image_path }}" alt="Imagem {{ loop.index }}" class="{% if loop.first %}active{% endif %}">-->
+            <img src="{{ image_paths[0] }}">
+<!--            {% endfor %}-->
             {% else %}
             <p>Nenhuma imagem encontrada para o código {{ cod }}.</p>
             {% endif %}
@@ -45,19 +46,19 @@
 </div>
 
 <script>
-    const images = document.querySelectorAll('.images-container img');
-    let currentIndex = 0;
-
-    function showNextImage() {
-
-        images[currentIndex].classList.remove('active');
-
-        currentIndex = (currentIndex + 1) % images.length;
-
-        images[currentIndex].classList.add('active');
-    }
-
-    setInterval(showNextImage, 2000);
+//    const images = document.querySelectorAll('.images-container img');
+//    let currentIndex = 0;
+//
+//    function showNextImage() {
+//
+//        images[currentIndex].classList.remove('active');
+//
+//        currentIndex = (currentIndex + 1) % images.length;
+//
+//        images[currentIndex].classList.add('active');
+//    }
+//
+//    setInterval(showNextImage, 1000);
 
 
 </script>
